@@ -1,6 +1,7 @@
 //const initSqlJs = require('sql-wasm.js');
 import initSqlJs from "sql.js";
 import JSZip from "jszip";
+import Deck from "./Deck.js";
 export const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 export async function testdb(){
     //const db = new SQL.Database();
@@ -16,4 +17,7 @@ export async function testdb(){
     let zip = new JSZip();
     zip.file("stuff.weird", blobb);
     return await zip.generateAsync({type: "blob"});
+}
+export function NewDeck(){
+    return new Deck();
 }
