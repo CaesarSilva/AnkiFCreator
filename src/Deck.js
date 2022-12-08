@@ -1,7 +1,8 @@
 import initSqlJs from "sql.js";
 import JSZip from "jszip";
 import sha1 from "js-sha1"
-
+//const base91 = require('node-base91');
+import baseX from "base-x";
 
 class Deck{
     constructor(){
@@ -9,6 +10,7 @@ class Deck{
         //});
         this.db;
         this.deckid;
+        this.modelid;
         this.media = {};
         this.initDb();
     }
@@ -105,25 +107,32 @@ class Deck{
             `);
             
             let timenow = Date.now();
-            this.deckid = timenow+50;
+            this.deckid = timenow+50;//the values are slightly different to avoid confusion
+            this.modelid = timenow-100;
             console.log("datenow"+timenow);
             let deckObj = {
                 1 : {id:1,mod:0,name:"Defaultty",usn:0,collapsed:true,browserCollapsed:true,desc:"",
             dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]},
-                [this.deckid] : {id:timenow,mod:0,name:"Generated Deck",usn:-1,collapsed:false,
+                [this.deckid] : {id:this.deckid,mod:0,name:"Generated Deck2.",usn:-1,collapsed:false,
                 browserCollapsed:false,desc:"",
                 dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]}
             };
-            let confObj = {};
+            let confObj = {
+              curlDeck: 1, newSpread:0, schedVer:2,
+              timeLim: 0, addToCur: true, curlModel: this.modelid,
+              estTimes: true, activeDecks:[1],
+              dayLearnFirst:false,
+              nextPos:1, creationOffset:180, sortType:"noteFld"
+            };
             //TODO: FIND if conf or dconf is causing the issues
             console.log(JSON.stringify(deckObj));
             let dConfObg = {};
-            let modelsObj = {1592961957962:{css:".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }",
+            let modelsObj = {[this.modelid]:{css:".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }",
             did:this.deckid,
             flds: [
               {name: "Front", ord:0, sticky:false, rtl:false,font:"Arial",size:20,description:""},
               {name: "Back", ord:1, sticky:false, rtl:false,font:"Arial",size:20,description:""}//error here
-            ], id: 1592961957962, latexPost:"\\end{document}",
+            ], id: this.modelid, latexPost:"\\end{document}",
             latexPre: "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n",
             mod: Math.floor(timenow/1000),
             name: "Basic-672e3",
@@ -149,22 +158,33 @@ class Deck{
             this.newCard({front: "sfs2ront"+timenow, back: "xxbac3k"+timenow});
             this.newCard({front: "sf2rondt"+timenow, back: "xxbac33k"+timenow});
             this.newCard({front: "sf2rdonat"+timenow, back: "xxbfac3k"+timenow});
+            this.newCard({front: "Katze", back: "xxbfac3k"+timenow});
 
     }
     newCard(cardData){
       let timenow = Date.now();
-      console.log("newCardTimeNow:"+timenow)
-      let guid = sha1.hex(cardData.front).slice(5,15);
+      let b91Str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#$%&()*+,./:;<=>?@[]^_`{|}~"';
+      let b91 = baseX(b91Str);//this doesn't seem to match the base91 encodings i did online, but it's supposed to be random anyway
+      let Uint = new Uint8Array(8);
+      Uint[0]= Math.floor(Math.random() * 256);
+      Uint[1]= Math.floor(Math.random() * 256);
+      Uint[2]= Math.floor(Math.random() * 256);
+      Uint[3]= Math.floor(Math.random() * 256);
+      Uint[4]= Math.floor(Math.random() * 256);
+      Uint[5]= Math.floor(Math.random() * 256);
+      Uint[6]= Math.floor(Math.random() * 256);
+      Uint[7]= Math.floor(Math.random() * 256);
+
+      console.log(Uint)
+      console.log("test2"+b91.encode(Uint));
+      let guid = b91.encode(Uint);
+      console.log("guid"+guid);
       //id,guid,mid,mod,usn,tags,flds,sfld,csum,flags,data
-      let ShaNum = Number("0x"+sha1.hex(cardData.back));
-      console.log("0x"+sha1.hex(cardData.back));
-      console.log("ShaNum:"+ShaNum)
-      let ShaStr = ShaNum.toString();
-      console.log("ShaStr:"+ShaStr);
-      let csum = Number(ShaStr.slice(0,11))*1000000000;
+      let ShaNum = Number("0x"+sha1.hex(cardData.front).slice(0,8));
+      let csum = ShaNum;
       console.log(csum);
       this.db.run("INSERT INTO notes VALUES (?,?,?,?,?,?,?,?,?,?,?)",[
-        timenow, guid, 1592961957962, Math.floor(timenow/1000),-1,"",(cardData.front+""+cardData.back),cardData.front,
+        timenow, guid, this.modelid, Math.floor(timenow/1000),-1,"",(cardData.front+""+cardData.back),cardData.front,
         csum,0,""
       ]);
 
