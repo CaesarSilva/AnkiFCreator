@@ -18,6 +18,6 @@ export async function testdb(){
     zip.file("stuff.weird", blobb);
     return await zip.generateAsync({type: "blob"});
 }
-export function NewDeck(deckName){
-    return new Deck(deckName);
+export function NewDeck(deckName, configObj = {}){
+    return new Deck(deckName, configObj);
 }

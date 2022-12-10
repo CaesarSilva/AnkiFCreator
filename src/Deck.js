@@ -5,7 +5,7 @@ import sha1 from "js-sha1"
 import baseX from "base-x";
 
 class Deck{
-    constructor(deckName){
+    constructor(deckName, configObj = {}){
         //initSqlJs().then((SQL)=>{
         //});
         this.db;
@@ -13,9 +13,18 @@ class Deck{
         this.modelid;
         this.deckName = deckName;
         this.media = {};
-        this.initDb();
+        let addCSS = "";
+        let cfgObj = {tableCenter: true, textAlign: "center"};//default values
+        Object.keys(configObj).forEach(key => {
+          //console.log(key, obj[key]);
+          cfgObj[key] = configObj[key];
+        });
+        if(cfgObj.tableCenter){
+          addCSS += "table { margin-left:auto; margin-right:auto; }\n";
+        }
+        this.initDb(cfgObj,addCSS);
     }
-    async initDb(){
+    async initDb(configObj,addCSS){
             let SQL = await initSqlJs();
             //Create the database
             this.db = new SQL.Database();
@@ -128,7 +137,7 @@ class Deck{
             //TODO: FIND if conf or dconf is causing the issues
             console.log(JSON.stringify(deckObj));
             let dConfObg = {};
-            let modelsObj = {[this.modelid]:{css:".card { font-family: arial; font-size: 20px; text-align: center; color: black; background-color: white; }",
+            let modelsObj = {[this.modelid]:{css:`.card { font-family: arial; font-size: 20px; text-align: ${configObj.textAlign}; color: black; background-color: white; }`+ addCSS,
             did:this.deckid,
             flds: [
               {name: "Front", ord:0, sticky:false, rtl:false,font:"Arial",size:20,description:""},
