@@ -5,12 +5,13 @@ import sha1 from "js-sha1"
 import baseX from "base-x";
 
 class Deck{
-    constructor(){
+    constructor(deckName){
         //initSqlJs().then((SQL)=>{
         //});
         this.db;
         this.deckid;
         this.modelid;
+        this.deckName = deckName;
         this.media = {};
         this.initDb();
     }
@@ -113,7 +114,7 @@ class Deck{
             let deckObj = {
                 1 : {id:1,mod:0,name:"Defaultty",usn:0,collapsed:true,browserCollapsed:true,desc:"",
             dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]},
-                [this.deckid] : {id:this.deckid,mod:0,name:"Generated Deck2.",usn:-1,collapsed:false,
+                [this.deckid] : {id:this.deckid,mod:0,name:this.deckName ,usn:-1,collapsed:false,
                 browserCollapsed:false,desc:"",
                 dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]}
             };
@@ -154,11 +155,11 @@ class Deck{
             JSON.stringify(dConfObg), "{}" //dconf and tags
 
             ]);
-            this.newCard({front: "sfront"+timenow, back: "xxback"+timenow});
+            /*this.newCard({front: "sfront"+timenow, back: "xxback"+timenow});
             this.newCard({front: "sfs2ront"+timenow, back: "xxbac3k"+timenow});
             this.newCard({front: "sf2rondt"+timenow, back: "xxbac33k"+timenow});
             this.newCard({front: "sf2rdonat"+timenow, back: "xxbfac3k"+timenow});
-            this.newCard({front: "Katze", back: "xxbfac3k"+timenow});
+            this.newCard({front: "Katze", back: "xxbfac3k"+timenow});*/
 
     }
     newCard(cardData){
