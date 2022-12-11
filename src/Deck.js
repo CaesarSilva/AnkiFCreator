@@ -121,7 +121,7 @@ class Deck{
             this.modelid = timenow-100;
             console.log("datenow"+timenow);
             let deckObj = {
-                1 : {id:1,mod:0,name:"Defaultty",usn:0,collapsed:true,browserCollapsed:true,desc:"",
+                1 : {id:1,mod:0,name:"Default",usn:0,collapsed:true,browserCollapsed:true,desc:"",
             dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]},
                 [this.deckid] : {id:this.deckid,mod:0,name:this.deckName ,usn:-1,collapsed:false,
                 browserCollapsed:false,desc:"",
@@ -134,9 +134,14 @@ class Deck{
               dayLearnFirst:false,
               nextPos:1, creationOffset:180, sortType:"noteFld"
             };
-            //TODO: FIND if conf or dconf is causing the issues
             console.log(JSON.stringify(deckObj));
-            let dConfObg = {};
+            let dConfObg = {1:{
+              id:1, mod:0, name: "Default", usn:0, maxTaken:60, autoplay:true,timer:0,
+              replayq:true,new:{bury:false,delays:[1,10]},rev:{bury:false,ease4:1.3,ivlFct:1,
+              maxIvl: 36500, perDay: 200, hardFactor:1.2}, 
+              lapse: {delays:[10], leechAction: 1, leechFails: 8, minInt:1, mult:0},
+              dyn:false, newMix:0, newPerDayMinimum:0,interdayLearningMix:0, reviewOrder: 0
+            }};//dConf doesn't seem to influence anything, it's being kept for compatibility
             let modelsObj = {[this.modelid]:{css:`.card { font-family: arial; font-size: 20px; text-align: ${configObj.textAlign}; color: black; background-color: white; }`+ addCSS,
             did:this.deckid,
             flds: [
@@ -155,7 +160,6 @@ class Deck{
 
             }};
             console.log("\n\n\n"+JSON.stringify(modelsObj)+"\n\n");
-            //let testModel = `{"1592961957951":{"id":1592961957951,"name":"Basic-672e3","type":0,"mod":1658111204,"usn":-1,"sortf":0,"did":1615428771302,"tmpls":[{"name":"Card 1","ord":0,"qfmt":"{{Front}}","afmt":"{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}","bqfmt":"","bafmt":"","did":null,"bfont":"","bsize":0}],"flds":[{"name":"Front","ord":0,"sticky":false,"rtl":false,"font":"Arial","size":20,"description":"","media":[]},{"name":"Back","ord":1,"sticky":false,"rtl":false,"font":"Arial","size":20,"description":"","media":[]}],"css":".card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}\n","latexPre":"\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n","latexPost":"\\end{document}","latexsvg":false,"req":[[0,"any",[0]]],"vers":[],"tags":[]},"1670338649603":{"id":1670338649603,"name":"Basic","type":0,"mod":0,"usn":0,"sortf":0,"did":null,"tmpls":[{"name":"Card 1","ord":0,"qfmt":"{{Front}}","afmt":"{{FrontSide}}\n\n<hr id=answer>\n\n{{Back}}","bqfmt":"","bafmt":"","did":null,"bfont":"","bsize":0}],"flds":[{"name":"Front","ord":0,"sticky":false,"rtl":false,"font":"Arial","size":20,"description":""},{"name":"Back","ord":1,"sticky":false,"rtl":false,"font":"Arial","size":20,"description":""}],"css":".card {\n    font-family: arial;\n    font-size: 20px;\n    text-align: center;\n    color: black;\n    background-color: white;\n}\n","latexPre":"\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n","latexPost":"\\end{document}","latexsvg":false,"req":[[0,"any",[0]]]}}`;
             
             this.db.run("INSERT INTO col VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 
             [523534,Math.floor(timenow/1000),timenow,//id, creation in seconds, last modified in ms
@@ -164,11 +168,7 @@ class Deck{
             JSON.stringify(dConfObg), "{}" //dconf and tags
 
             ]);
-            /*this.newCard({front: "sfront"+timenow, back: "xxback"+timenow});
-            this.newCard({front: "sfs2ront"+timenow, back: "xxbac3k"+timenow});
-            this.newCard({front: "sf2rondt"+timenow, back: "xxbac33k"+timenow});
-            this.newCard({front: "sf2rdonat"+timenow, back: "xxbfac3k"+timenow});
-            this.newCard({front: "Katze", back: "xxbfac3k"+timenow});*/
+
 
     }
     newCard(cardData){
@@ -185,8 +185,7 @@ class Deck{
       Uint[6]= Math.floor(Math.random() * 256);
       Uint[7]= Math.floor(Math.random() * 256);
 
-      console.log(Uint)
-      console.log("test2"+b91.encode(Uint));
+      //console.log(Uint)
       let guid = b91.encode(Uint);
       console.log("guid"+guid);
       //id,guid,mid,mod,usn,tags,flds,sfld,csum,flags,data

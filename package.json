@@ -1,7 +1,7 @@
 {
   "name": "AnkiFCreator",
-  "version": "1.0.0",
-  "description": "Sample JS utilities library",
+  "version": "0.0.1",
+  "description": "Anki flash cards deck creator",
   "main": "dist/AnkiFCreator.cjs.js",
   "module": "dist/AnkiFCreator.esm.js",
   "browser": "dist/AnkiFCreator.umd.js",
