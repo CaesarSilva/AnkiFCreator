@@ -119,7 +119,7 @@ class Deck{
             let timenow = Date.now();
             this.deckid = timenow+50;//the values are slightly different to avoid confusion
             this.modelid = timenow-100;
-            console.log("datenow"+timenow);
+            //console.log("datenow"+timenow);
             let deckObj = {
                 1 : {id:1,mod:0,name:"Default",usn:0,collapsed:true,browserCollapsed:true,desc:"",
             dyn:0,conf:1,extendNew:0,extendRev:0,newToday:[0,0],revToday:[0,0],lrnToday:[0,0],timeToday:[0,0]},
@@ -134,7 +134,7 @@ class Deck{
               dayLearnFirst:false,
               nextPos:1, creationOffset:180, sortType:"noteFld"
             };
-            console.log(JSON.stringify(deckObj));
+            //console.log(JSON.stringify(deckObj));
             let dConfObg = {1:{
               id:1, mod:0, name: "Default", usn:0, maxTaken:60, autoplay:true,timer:0,
               replayq:true,new:{bury:false,delays:[1,10]},rev:{bury:false,ease4:1.3,ivlFct:1,
@@ -159,7 +159,7 @@ class Deck{
             type: 0, usn: -1, vers: []
 
             }};
-            console.log("\n\n\n"+JSON.stringify(modelsObj)+"\n\n");
+            //console.log("\n\n\n"+JSON.stringify(modelsObj)+"\n\n");
             
             this.db.run("INSERT INTO col VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", 
             [523534,Math.floor(timenow/1000),timenow,//id, creation in seconds, last modified in ms
@@ -187,11 +187,11 @@ class Deck{
 
       //console.log(Uint)
       let guid = b91.encode(Uint);
-      console.log("guid"+guid);
+      //console.log("guid"+guid);
       //id,guid,mid,mod,usn,tags,flds,sfld,csum,flags,data
       let ShaNum = Number("0x"+sha1.hex(cardData.front).slice(0,8));
       let csum = ShaNum;
-      console.log(csum);
+      //console.log(csum);
       this.db.run("INSERT INTO notes VALUES (?,?,?,?,?,?,?,?,?,?,?)",[
         timenow, guid, this.modelid, Math.floor(timenow/1000),-1,"",(cardData.front+""+cardData.back),cardData.front,
         csum,0,""
