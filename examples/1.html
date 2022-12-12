@@ -1,13 +1,16 @@
 <html>
     <head>
         <title></title>
-        <script src="dist/AnkiFCreator.umd.js"></script>
+        <script src="../dist/AnkiFCreator.umd.js"></script>
         <script>
-        let xz = AnkiFCreator.NewDeck();
-        async function downloadtest(){
+        let deck = AnkiFCreator.NewDeck("My new deck");//deck name
+        function addCard(front, back){
+          deck.newCard({front: front, back: back});
+        }
+        async function DownloadDeck(){
         
 				//let blob = await AnkiFCreator.testdb();
-        let blob = await xz.GenerateDeckFile();
+        let blob = await deck.GenerateDeckFile();
         console.log(blob);
 				//FileSaver.saveAs(blob, "output.step3.json");
 				let tempLink = document.createElement("a");

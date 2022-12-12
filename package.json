@@ -1,5 +1,5 @@
 {
-  "name": "AnkiFCreator",
+  "name": "ankifcreator",
   "version": "0.0.1",
   "description": "Anki flash cards deck creator",
   "main": "dist/AnkiFCreator.cjs.js",
